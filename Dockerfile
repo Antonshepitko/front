@@ -1,13 +1,11 @@
-# 1. Сборка фронта
 FROM node:20 AS build
 WORKDIR /app
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 COPY . .
 RUN npm run build
-
-# 2. Раздача статики Nginx'ом
+RUN npm run export   # выводит в папку 'out'
 FROM nginx:1.27
-COPY --from=build /app/build /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /app/out /usr/share/nginx/html
 EXPOSE 80
