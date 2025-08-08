@@ -1,0 +1,40 @@
+version: '3.8'
+
+networks:
+  donation-net:
+    name: donation-net
+    driver: bridge
+
+services:
+  mongo:
+    image: mongo:7
+    container_name: donation-mongo
+    ports:
+      - "27017:27017"
+    networks:
+      - donation-net
+    volumes:
+      - mongo_data:/data/db
+
+  backend:
+    image: donation-backend
+    container_name: donation-backend
+    depends_on:
+      - mongo
+    networks:
+      - donation-net
+    ports:
+      - "5000:5000"
+
+  frontend:
+    build: ./frontend
+    container_name: donation-frontend
+    depends_on:
+      - backend
+    networks:
+      - donation-net
+    ports:
+      - "80:80"
+
+volumes:
+  mongo_data:
