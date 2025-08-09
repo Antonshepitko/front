@@ -5,7 +5,7 @@ WORKDIR /app
 # Включаем pnpm через corepack и ставим зависимости по pnpm-lock.yaml
 COPY package.json pnpm-lock.yaml ./
 RUN corepack enable && corepack prepare pnpm@9.0.0 --activate
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --no-frozen-lockfile
 
 # Копируем исходники и собираем
 COPY . .
