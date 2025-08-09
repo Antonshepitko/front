@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Clone') {
             steps {
-                git branch: 'master', url: 'git@github.com:Antonshepitko/donation-app.git', credentialsId: 'github-creds'
+                git branch: 'master', url: 'git@github.com:Antonshepitko/front.git', credentialsId: 'github-creds'
             }
         }
         stage('Build Docker Image') {
