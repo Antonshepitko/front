@@ -1,30 +1,22 @@
-const KEY = 'auth_token';
-const isBrowser = typeof window !== 'undefined';
+export const API_BASE =
+  process.env.NEXT_PUBLIC_API_BASE || 'http://45.144.52.219:5000';
 
-function setCookie(name: string, value: string, days = 7) {
-  if (!isBrowser) return;
-  const maxAge = days * 24 * 60 * 60;
-  document.cookie = `${name}=${encodeURIComponent(value)}; Path=/; Max-Age=${maxAge}; SameSite=Lax`;
-}
-function deleteCookie(name: string) {
-  if (!isBrowser) return;
-  document.cookie = `${name}=; Path=/; Max-Age=0; SameSite=Lax`;
-}
+export function setAuth(token: string, username: string) {
+  // localStorage для фронта
+  localStorage.setItem('token', token);
+  localStorage.setItem('username', username);
 
-export function saveToken(token: string) {
-  if (isBrowser) localStorage.setItem(KEY, token);
-  setCookie(KEY, token, 7);
+  // cookie для middleware (redir на серверной стороне)
+  document.cookie = `token=${token}; Max-Age=${60 * 60}; Path=/; SameSite=Lax`;
 }
 
-export function getToken(): string | null {
-  if (!isBrowser) return null;
-  const m = document.cookie.match(new RegExp(`(?:^|; )${KEY}=([^;]*)`));
-  const fromCookie = m ? decodeURIComponent(m[1]) : null;
-  const fromLS = localStorage.getItem(KEY);
-  return fromCookie || fromLS;
+export function clearAuth() {
+  localStorage.removeItem('token');
+  localStorage.removeItem('username');
+  document.cookie = `token=; Max-Age=0; Path=/`;
 }
 
-export function clearToken() {
-  if (isBrowser) localStorage.removeItem(KEY);
-  deleteCookie(KEY);
+export function getUsernameClient(): string | null {
+  if (typeof window === 'undefined') return null;
+  return localStorage.getItem('username');
 }

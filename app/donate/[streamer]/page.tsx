@@ -14,6 +14,8 @@ import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Heart, Music, DollarSign, CreditCard, Wallet, ArrowLeft, Volume2, Star, Info } from 'lucide-react';
+import LogoutButton from '@/components/LogoutButton';
+
 
 export default function DonatePage({
   params,

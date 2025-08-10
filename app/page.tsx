@@ -5,6 +5,11 @@ import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Heart, Music, Users, DollarSign, TrendingUp } from "lucide-react"
 
+
+export default function Home() {
+  redirect('/auth');
+}
+
 export default function StreamerDashboard() {
   const recentDonations = [
     {
