@@ -22,6 +22,7 @@ export default function DonatePage({
     return `${window.location.origin}/donate/${encodeURIComponent(streamer)}`;
   }, [streamer]);
 
+  // Подключение к WebSocket (напрямую к backend:5000)
   useEffect(() => {
     if (!streamer) return;
     const wsUrl = `ws://${window.location.hostname}:5000/api/ws`;
@@ -51,12 +52,10 @@ export default function DonatePage({
 
   return (
     <div className="min-h-screen bg-black text-white">
+      {/* Верхняя панель */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-neutral-800">
         <div className="text-lg font-semibold">
-          Streamer:{' '}
-          <span className="text-neutral-300">
-            {streamer || '...'}
-          </span>
+          Streamer: <span className="text-neutral-300">{streamer || '...'}</span>
         </div>
         <button
           className="px-4 py-2 rounded-xl bg-neutral-800 hover:bg-neutral-700 border border-neutral-700"
@@ -67,6 +66,7 @@ export default function DonatePage({
       </div>
 
       <div className="max-w-4xl mx-auto px-4 py-6">
+        {/* Support the stream */}
         <div className="mb-6 rounded-2xl border border-neutral-800 p-4 bg-neutral-900/50">
           <div className="flex flex-col md:flex-row md:items-center gap-3">
             <div className="text-neutral-300">Support the stream:</div>
@@ -76,7 +76,7 @@ export default function DonatePage({
               target="_blank"
               rel="noreferrer"
             >
-              {shareLink}
+              {shareLink || '...'}
             </a>
             <button
               onClick={onCopy}
@@ -86,11 +86,12 @@ export default function DonatePage({
             </button>
           </div>
         </div>
+
+        {/* Форма доната — оставил как есть / подставишь свою */}
         <div className="rounded-2xl border border-neutral-800 p-6 bg-neutral-900/40">
           <h2 className="text-xl font-semibold mb-4">Отправить донат</h2>
           <p className="text-neutral-400">
-            Здесь остаётся твоя текущая форма (имя донатора, сумма, валюта,
-            сообщение) — её не менял.
+            Здесь остаётся твоя текущая форма (имя донатора, сумма, валюта, сообщение).
           </p>
         </div>
       </div>

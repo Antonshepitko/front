@@ -23,14 +23,10 @@ export default function AuthPage() {
     try {
       if (mode === 'register') {
         await apiRegister(form.username, form.password);
-        // после регистрации сразу логиним
       }
       const token = await apiLogin(form.username, form.password);
       saveToken(token);
-
-      // ВРЕМЕННО: редирект на страницу стримера с тестовыми данными
-      // позже подставим реального стримера/кабинет
-      router.replace('/donate/test');
+      router.replace('/donate/test'); // временно
     } catch (err: any) {
       setError(err?.message || 'Ошибка запроса');
     } finally {
@@ -86,9 +82,7 @@ export default function AuthPage() {
             />
           </div>
 
-          {error && (
-            <div className="text-red-400 text-sm">{error}</div>
-          )}
+          {error && <div className="text-red-400 text-sm">{error}</div>}
 
           <button
             type="submit"
@@ -98,16 +92,6 @@ export default function AuthPage() {
             {loading ? 'Обработка…' : (mode === 'login' ? 'Войти' : 'Зарегистрироваться')}
           </button>
         </form>
-
-        <p className="text-center text-neutral-400 text-sm mt-6">
-          {mode === 'login' ? 'Нет аккаунта?' : 'Уже есть аккаунт?'}{' '}
-          <button
-            className="underline hover:text-white"
-            onClick={() => setMode(mode === 'login' ? 'register' : 'login')}
-          >
-            {mode === 'login' ? 'Зарегистрируйтесь' : 'Войдите'}
-          </button>
-        </p>
       </div>
     </div>
   );
