@@ -1,14 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  typescript: {
-    ignoreBuildErrors: true,
-  },
-  images: {
-    unoptimized: true,
-  },
-}
+  // SSR оставляем (НЕ ставим output: 'export')
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'http://donation-backend:5000/api/:path*'
+      }
+    ];
+  }
+};
 
-export default nextConfig
+export default nextConfig;

@@ -1,24 +1,17 @@
-# ---------- 1) BUILD (pnpm) ----------
-FROM node:20 AS build
+# ---------- Next.js SSR runtime ----------
+FROM node:20
 WORKDIR /app
 
-# Используем pnpm через corepack. Если используешь npm — см. README.md.
+# pnpm через corepack
 COPY package.json pnpm-lock.yaml* ./
 RUN corepack enable && corepack prepare pnpm@9.0.0 --activate
-# В CI можно оставить --no-frozen-lockfile, пока нет синхронизированного lock-файла.
+# пока lock не синхронизирован — без frozen; зафиксируем позже
 RUN pnpm install --no-frozen-lockfile
 
-# Копируем исходники проекта и собираем
+# код и сборка
 COPY . .
-# Скрипт build должен генерировать статику: Vite -> dist, Next (export) -> out, CRA -> build
 RUN pnpm build
 
-# Приводим артефакт к единому месту /app/build
-RUN mkdir -p /app/build &&     if [ -d dist ]; then cp -r dist/* build/;     elif [ -d out ]; then cp -r out/* build/;     elif [ -d build ] && [ -f build/index.html ]; then true;     else echo '❌ Не найден артефакт сборки (dist/out/build). Проверь скрипт build' && exit 1; fi
-
-# ---------- 2) RUNTIME (nginx) ----------
-FROM nginx:1.27
-COPY ./.nginx/nginx.conf /etc/nginx/conf.d/default.conf
-COPY --from=build /app/build /usr/share/nginx/html
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+EXPOSE 3000
+# стандартный старт Next SSR
+CMD ["pnpm", "start", "-p", "3000"]
